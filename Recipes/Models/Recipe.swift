@@ -5,7 +5,7 @@
 //  Created by Spencer Curtis on 2/5/25.
 //
 
-struct Recipe: Decodable, Identifiable {
+struct Recipe: Decodable, Identifiable, Equatable {
     
     var id: String { uuid }
     
