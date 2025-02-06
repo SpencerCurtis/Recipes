@@ -50,14 +50,19 @@ class RecipesViewModel: ObservableObject {
     private func loadSmallImagesForRecipes(_ recipes: [Recipe]) async {
         for recipe in recipes {
             
-            if let cached = await imageCache.image(for: recipe.photoUrlSmall, size: .small) {
+            if let url = recipe.photoUrlSmall,
+               let cached = await imageCache.image(for: url, size: .small) {
                 recipeImagesSmall[recipe.id] = cached
                 continue
             }
             
             do {
-                let image = try await imageCache.loadRecipeImage(from: recipe.photoUrlSmall, size: .small)
-                recipeImagesSmall[recipe.id] = image
+                if let url = recipe.photoUrlSmall {
+                    let image = try await imageCache.loadRecipeImage(from: url, size: .small)
+                    recipeImagesSmall[recipe.id] = image
+                } else {
+                    throw RecipeFetchingError.noImageUrl
+                }
             } catch {
                 print("Failed to load small image for recipe: \(recipe.id)")
                 recipeImagesSmall[recipe.id] = Image(systemName: "photo")
@@ -67,14 +72,19 @@ class RecipesViewModel: ObservableObject {
     
     @MainActor
     func loadLargeImageForRecipe(_ recipe: Recipe) async {
-        if let cached = await imageCache.image(for: recipe.photoUrlLarge, size: .large) {
+        if let url = recipe.photoUrlLarge,
+           let cached = await imageCache.image(for: url, size: .large) {
             recipeImagesLarge[recipe.id] = cached
             return
         }
         
         do {
-            let image = try await imageCache.loadRecipeImage(from: recipe.photoUrlLarge, size: .large)
-            recipeImagesLarge[recipe.id] = image
+            if let url = recipe.photoUrlLarge {
+                let image = try await imageCache.loadRecipeImage(from: url, size: .large)
+                recipeImagesLarge[recipe.id] = image
+            } else {
+                throw RecipeFetchingError.noImageUrl
+            }
         } catch {
             print("Failed to load large image for recipe: \(recipe.id)")
             recipeImagesSmall[recipe.id] = Image(systemName: "photo")
@@ -95,4 +105,5 @@ enum RecipeFetchingError: Error {
     case decodingError
     case noRecipes
     case imageLoadingError
+    case noImageUrl
 }

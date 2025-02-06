@@ -26,7 +26,7 @@ struct RecipeCell: View {
     
     func closedContent() -> some View {
         
-        HStack(alignment: .top) {
+        HStack(alignment: .center) {
             RecipeImageView(viewModel: viewModel, recipe: recipe, size: .small)
                 .frame(width: 80, height: 80)
             
@@ -34,17 +34,15 @@ struct RecipeCell: View {
                 Text(recipe.name)
                     .font(.title3)
                     .fontWeight(.semibold)
-                Spacer()
+                    .padding(.bottom, 8)
                 Text("\(recipe.cuisine) cuisine")
                     .foregroundStyle(.secondary)
             }
-            .padding(.vertical)
             
             Spacer()
             
             chevron()
         }
-        .padding(.top)
     }
     
     func expandedContent() -> some View {
@@ -59,6 +57,7 @@ struct RecipeCell: View {
             VStack(alignment: .leading) {
                 Text(recipe.name)
                     .font(.title3)
+                    .fontWeight(.semibold)
                 Text("\(recipe.cuisine) cuisine")
                     .font(.caption)
                     .foregroundStyle(.secondary)
