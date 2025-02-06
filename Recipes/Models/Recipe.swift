@@ -14,8 +14,8 @@ struct Recipe: Decodable, Identifiable, Equatable {
     let cuisine: String
     let sourceUrl: String?
     let youtubeUrl: String?
-    let photoUrlLarge: String
-    let photoUrlSmall: String
+    let photoUrlLarge: String?
+    let photoUrlSmall: String?
     
     enum CodingKeys: String, CodingKey {
         case uuid
